@@ -11,6 +11,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.BlockRenderView;
 
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
 public class ArdaGrassBakedModel extends ForwardingBakedModel {
@@ -26,14 +27,16 @@ public class ArdaGrassBakedModel extends ForwardingBakedModel {
 
     @Override
     public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+        AtomicInteger counter = new AtomicInteger();
         context.pushTransform(quad -> {
-            if (quad.nominalFace().getAxis() != Direction.Axis.Y) {
+            if (quad.nominalFace().getAxis() != Direction.Axis.Y && counter.get() <= 9) {
                 Direction face = quad.nominalFace();
 
                 if (canFullyConnect(blockView, state, pos, face)) {
                     spriteBake(quad, state, randomSupplier);
                 }
             }
+            counter.addAndGet(1);
             return true;
         });
         super.emitBlockQuads(blockView, state, pos, randomSupplier, context);
