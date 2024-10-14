@@ -46,7 +46,8 @@ public class ArdaGrassModelLoaderMixin {
         if (id instanceof ModelIdentifier modelId) {
             if (!modelId.getVariant().equals("inventory")) {
                 betterGrassNames.forEach(s -> {
-                    if (modelId.toString().startsWith(s)) {
+                    String path = modelId.getNamespace() + ":" + modelId.getPath();
+                    if (path.equals(s)) {
                         var newModel = new ArdaGrassUnbakedModel(unbakedModel);
                         this.unbakedModels.put(id, newModel);
                         this.modelsToLoad.addAll(newModel.getModelDependencies());
